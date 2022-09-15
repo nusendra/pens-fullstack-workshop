@@ -3,8 +3,6 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const register = async (req, res) => {
-	console.log("as");
-	console.log(req.body);
 	try {
 		const { name, email, password } = req.body;
 
@@ -19,9 +17,9 @@ export const register = async (req, res) => {
 				password,
 			},
 		});
-		return res.send("create sukses", user);
+
+		res.send(user);
 	} catch (error) {
-		res.status(500).send("Something broke!");
-		throw new Error(error);
+		res.status(500).send(error);
 	}
 };
