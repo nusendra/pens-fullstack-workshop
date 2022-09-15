@@ -76,19 +76,14 @@ export const logout = (req, res) => {
 	return res.json({ success: true, message: "logged out" });
 };
 
-export const profile = async (req, res) => {
-  try {
-    const { id } = req.params;
-		// check user existence
-		const user = await prisma.user.findUnique({ where: { id: parseInt(id) } });
-		if (!user) {
-			return res.status(404).send("ID not found");
-		}
-
-		return res
-			.json({ success: true, message: user });
-	} catch (error) {
-		return res.json({ error: error });
-	}
-
+export const getProfile = async (req, res) => {
+	const { userId }  = req.params;
+	if (!userId || typeof userId !== 'string') return res.status(400).json({ e: 'invalid user id'});
+	const id = parseInt(userId, 10);
+	if (!id) return res.status(400).json({ e: 'invalid user id'});
+	
+	const user = await prisma.user.findUnique({ where: { id } });
+	if (!user) return res.status(404).json({ e: 'user id not found' });
+	console.log(user)
+	return res.status(200).json(user);
 }
