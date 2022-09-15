@@ -75,3 +75,15 @@ export const logout = (req, res) => {
 	res.clearCookie("token");
 	return res.json({ success: true, message: "logged out" });
 };
+
+export const getProfile = async (req, res) => {
+	const { userId }  = req.params;
+	if (!userId || typeof userId !== 'string') return res.status(400).json({ e: 'invalid user id'});
+	const id = parseInt(userId, 10);
+	if (!id) return res.status(400).json({ e: 'invalid user id'});
+	
+	const user = await prisma.user.findUnique({ where: { id } });
+	if (!user) return res.status(404).json({ e: 'user id not found' });
+	console.log(user)
+	return res.status(200).json(user);
+}
