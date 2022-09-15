@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("POSTGRES_DB_URL")
+  provider          = "postgresql"
+  url               = env("POSTGRES_DB_URL")
   shadowDatabaseUrl = env("POSTGRES_DB_URL")
 }
 
@@ -12,5 +12,16 @@ model User {
   id        Int      @id @default(autoincrement())
   email     String
   password  String
+  name      String
+  todos     Todo[]
   createdAt DateTime @default(now())
+}
+
+model Todo {
+  id          Int      @id @default(autoincrement())
+  description String
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  doneAt      DateTime
+  createdAt   DateTime @default(now())
 }
