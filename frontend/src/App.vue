@@ -1,9 +1,11 @@
-<script setup>
-import { RouterLink, RouterView } from "vue-router";
-</script>
-
 <template>
-  <RouterView />
+  <router-view />
 </template>
 
-<style scoped></style>
+<script setup>
+import { onMounted } from "vue";
+
+onMounted(() => {
+  document.body.classList.add("mobile-view");
+});
+</script>
