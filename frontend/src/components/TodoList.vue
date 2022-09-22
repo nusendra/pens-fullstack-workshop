@@ -4,14 +4,24 @@
       v-for="(item, index) in todos"
       class="list-group-item d-flex justify-content-between align-items-start"
     >
-      <div style="">{{ item.task }}</div>
-      <button
-        type="button"
-        class="btn btn-outline-danger btn-sm"
-        @click="deleteTask(index)"
-      >
-        X
-      </button>
+      <del v-if="item.isDone">{{ item.task }}</del>
+      <span v-else>{{ item.task }}</span>
+      <div>
+        <button
+          type="button"
+          class="btn btn-outline-success btn-sm mx-1"
+          @click="doneTask(index)"
+        >
+          ✓
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-danger btn-sm"
+          @click="deleteTask(index)"
+        >
+          X
+        </button>
+      </div>
     </li>
   </ul>
 </template>
@@ -29,4 +39,14 @@ const emit = defineEmits(["deleteTask"]);
 const deleteTask = (index) => {
   emit("deleteTask", index);
 };
+
+const doneTask = (index) => {
+  emit("doneTask", index);
+};
 </script>
+
+<style scoped>
+.btn {
+  --bs-btn-line-height: 1;
+}
+</style>

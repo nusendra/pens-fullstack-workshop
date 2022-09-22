@@ -16,7 +16,7 @@
       Submit
     </button>
   </div>
-  <TodoList :todos="todos.list" @deleteTask="deleteTask" />
+  <TodoList :todos="todos.list" @deleteTask="deleteTask" @doneTask="doneTask" />
 </template>
 
 <script setup>
@@ -56,13 +56,17 @@ const deleteTask = (taskIndex) => {
   saveToLocalStorage();
 };
 
+const doneTask = (taskIndex) => {
+  todos.list = todos.list.filter((item, index) => {
+    if (index == taskIndex) {
+      item.isDone = true;
+    }
+    return item;
+  });
+  saveToLocalStorage();
+};
+
 const saveToLocalStorage = () => {
   localStorage.setItem("todos", JSON.stringify(todos.list));
 };
 </script>
-
-<style scoped>
-.btn {
-  --bs-btn-line-height: 1;
-}
-</style>
