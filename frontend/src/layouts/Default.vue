@@ -6,7 +6,9 @@ import Header from "../components/Header.vue";
   <div class="container-fluid">
     <Header />
 
-    <router-view class="mobile-view content" />
+    <div class="mobile-view content pl-3 px-3">
+      <router-view />
+    </div>
   </div>
 </template>
 
