@@ -34,19 +34,29 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 
 const task = ref("");
 const todos = reactive({
   list: [],
 });
 
+onMounted(() => {
+  const items = localStorage.getItem("todos");
+  todos.list = items ? JSON.parse(items) : [];
+});
+
 const addTask = () => {
+  if (!task.value) {
+    return;
+  }
   todos.list.unshift({
     task: task.value,
     isDone: false,
   });
   task.value = "";
+
+  saveToLocalStorage();
 };
 
 const deleteTask = (taskIndex) => {
@@ -55,6 +65,12 @@ const deleteTask = (taskIndex) => {
       return item;
     }
   });
+
+  saveToLocalStorage();
+};
+
+const saveToLocalStorage = () => {
+  localStorage.setItem("todos", JSON.stringify(todos.list));
 };
 </script>
 
