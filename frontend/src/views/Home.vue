@@ -16,25 +16,12 @@
       Submit
     </button>
   </div>
-  <ul class="list-group">
-    <li
-      v-for="(item, index) in todos.list"
-      class="list-group-item d-flex justify-content-between align-items-start"
-    >
-      <div style="">{{ item.task }}</div>
-      <button
-        type="button"
-        class="btn btn-outline-danger btn-sm"
-        @click="deleteTask(index)"
-      >
-        X
-      </button>
-    </li>
-  </ul>
+  <TodoList :todos="todos.list" @deleteTask="deleteTask" />
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from "vue";
+import TodoList from "../components/TodoList.vue";
 
 const task = ref("");
 const todos = reactive({
