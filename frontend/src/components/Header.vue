@@ -25,7 +25,29 @@
             <router-link class="nav-link" to="/about">About</router-link>
           </li>
         </ul>
+        <button type="button" class="navbar-text btn btn-link" @click="logout">
+          Logout
+        </button>
       </div>
     </div>
   </nav>
 </template>
+
+<script setup>
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const logout = async () => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/v1/users/logout`,
+    {
+      method: "POST",
+      credentials: "include",
+    }
+  );
+
+  if (!response.ok) console.log(response);
+  else router.push({ name: "Login" });
+};
+</script>

@@ -10,6 +10,7 @@ const router = createRouter({
       path: "/",
       name: "Default",
       component: () => import("../layouts/Default.vue"),
+      beforeEnter: requireAuth,
       children: [
         {
           path: "",
@@ -23,7 +24,35 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: "/",
+      name: "Auth",
+      component: () => import("../layouts/Auth.vue"),
+      beforeEnter: preventAuthPage,
+      children: [
+        {
+          path: "/login",
+          name: "Login",
+          component: () => import("../views/auth/Login.vue"),
+        },
+        {
+          path: "/register",
+          name: "Register",
+          component: () => import("../views/auth/Register.vue"),
+        },
+      ],
+    },
   ],
 });
+
+function requireAuth(to, from, next) {
+  if ($cookies.get("token")) next();
+  else next({ name: "Login" });
+}
+
+function preventAuthPage(to, from, next) {
+  if (!$cookies.get("token")) next();
+  else next({ name: "Home" });
+}
 
 export default router;
