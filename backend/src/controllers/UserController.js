@@ -44,7 +44,7 @@ export const login = async (req, res) => {
 		console.log(req.body);
 
 		if (!email || !password) {
-			return res.status(400).send("missing parameters");
+			return res.status(400).send("missing parameters x");
 		}
 
 		// check user existence
@@ -77,18 +77,16 @@ export const logout = (req, res) => {
 };
 
 export const profile = async (req, res) => {
-  try {
-    const { id } = req.params;
+	try {
+		const { id } = req.params;
 		// check user existence
 		const user = await prisma.user.findUnique({ where: { id: parseInt(id) } });
 		if (!user) {
 			return res.status(404).send("ID not found");
 		}
 
-		return res
-			.json({ success: true, message: user });
+		return res.json({ success: true, message: user });
 	} catch (error) {
 		return res.json({ error: error });
 	}
-
-}
+};
