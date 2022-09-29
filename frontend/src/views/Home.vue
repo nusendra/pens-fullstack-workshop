@@ -1,4 +1,5 @@
 <template>
+  <div v-if="isLoading" class="pt-3">Loading ...</div>
   <div class="input-group mb-3 pt-3">
     <input
       v-model="task"
@@ -24,49 +25,102 @@ import { ref, reactive, onMounted } from "vue";
 import TodoList from "../components/TodoList.vue";
 
 const task = ref("");
+const isLoading = ref(false);
 const todos = reactive({
   list: [],
 });
 
-onMounted(() => {
-  const items = localStorage.getItem("todos");
-  todos.list = items ? JSON.parse(items) : [];
+onMounted(async () => {
+  isLoading.value = true;
+  await getTodos();
+  isLoading.value = false;
 });
 
-const addTask = () => {
+const getTodos = async () => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/v1/todos`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    todos.list = data.todos;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const addTask = async () => {
   if (!task.value) {
     return;
   }
-  todos.list.unshift({
-    task: task.value,
-    isDone: false,
-  });
-  task.value = "";
 
-  saveToLocalStorage();
-};
+  try {
+    isLoading.value = true;
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/v1/todos`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          task: task.value,
+          isDone: false,
+        }),
+      }
+    );
 
-const deleteTask = (taskIndex) => {
-  todos.list = todos.list.filter((item, index) => {
-    if (index != taskIndex) {
-      return item;
+    if (response.ok) {
+      await getTodos();
+      task.value = "";
+      isLoading.value = false;
     }
-  });
-
-  saveToLocalStorage();
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-const doneTask = (taskIndex) => {
-  todos.list = todos.list.filter((item, index) => {
-    if (index == taskIndex) {
-      item.isDone = true;
+const deleteTask = async (task) => {
+  try {
+    isLoading.value = true;
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/v1/todos/${task._id}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+      }
+    );
+
+    if (response.ok) {
+      await getTodos();
+      isLoading.value = false;
     }
-    return item;
-  });
-  saveToLocalStorage();
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-const saveToLocalStorage = () => {
-  localStorage.setItem("todos", JSON.stringify(todos.list));
+const doneTask = async (task) => {
+  try {
+    isLoading.value = true;
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/v1/todos/${task._id}`,
+      {
+        method: "PUT",
+        credentials: "include",
+      }
+    );
+
+    if (response.ok) {
+      await getTodos();
+      isLoading.value = false;
+    }
+  } catch (err) {
+    console.log(err);
+  }
 };
 </script>

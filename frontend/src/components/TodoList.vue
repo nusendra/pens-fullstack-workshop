@@ -10,14 +10,14 @@
         <button
           type="button"
           class="btn btn-outline-success btn-sm mx-1"
-          @click="doneTask(index)"
+          @click="doneTask(item)"
         >
           ✓
         </button>
         <button
           type="button"
           class="btn btn-outline-danger btn-sm"
-          @click="deleteTask(index)"
+          @click="deleteTask(item)"
         >
           X
         </button>
@@ -36,12 +36,12 @@ const props = defineProps({
 
 const emit = defineEmits(["deleteTask"]);
 
-const deleteTask = (index) => {
-  emit("deleteTask", index);
+const deleteTask = (item) => {
+  emit("deleteTask", item);
 };
 
-const doneTask = (index) => {
-  emit("doneTask", index);
+const doneTask = (item) => {
+  emit("doneTask", item);
 };
 </script>
 
